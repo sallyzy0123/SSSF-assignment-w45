@@ -40,6 +40,7 @@ describe('Testing graphql api', () => {
     await mongoose.connection.close();
   });
 
+  // ✅
   // test not found
   it('responds with a not found message', async () => {
     await getNotFound(app);
@@ -67,16 +68,19 @@ describe('Testing graphql api', () => {
     password: '12345',
   };
 
+  // ✅
   // create first user
   it('should create a new user', async () => {
     await postUser(app, testUser);
   });
 
+  // ✅
   // create second user to try to modify someone else's cats and userdata
   it('should create second user', async () => {
     await postUser(app, testUser2);
   });
 
+  // ✅
   // test login
   it('should login user', async () => {
     const vars = {
@@ -88,6 +92,7 @@ describe('Testing graphql api', () => {
     userData = await loginUser(app, vars);
   });
 
+  // ✅
   // test login with second user
   it('should login second user', async () => {
     const vars = {
@@ -99,6 +104,7 @@ describe('Testing graphql api', () => {
     userData2 = await loginUser(app, vars);
   });
 
+  // ✅
   // test login with admin
   it('should login admin', async () => {
     const vars = {
@@ -110,6 +116,7 @@ describe('Testing graphql api', () => {
     adminData = await loginUser(app, vars);
   });
 
+  // ✅
   // make sure token has role (so that we can test if user is admin or not)
   it('token should have role', async () => {
     const dataFromToken = jwt.verify(
@@ -119,21 +126,25 @@ describe('Testing graphql api', () => {
     expect(dataFromToken).toHaveProperty('role');
   });
 
+  // ✅
   // test get all users
   it('should return array of users', async () => {
     await getUser(app);
   });
 
+  // ✅
   // test get single user
   it('should return single user', async () => {
     await getSingleUser(app, userData.user.id!);
   });
 
+  // ✅
   // test update user
   it('should update user', async () => {
     await putUser(app, userData.token!);
   });
 
+  // ✅
   // test cat upload
   let uploadData1: UploadResponse;
   let catData1: {input: CatTest};
@@ -150,6 +161,7 @@ describe('Testing graphql api', () => {
     };
   });
 
+  // ✅
   // test post cat data
   let catID1: string;
   it('should post cat data with file and location', async () => {
@@ -158,16 +170,19 @@ describe('Testing graphql api', () => {
     catID1 = cat.id!;
   });
 
+  // ✅
   // test get all cats
   it('should return array of cats', async () => {
     await getCat(app);
   });
 
+  // ✅
   // test get single cat
   it('should return single cat', async () => {
     await getSingleCat(app, catID1);
   });
 
+  // ✅
   // get cats by user id
   it('should return cats by current user', async () => {
     await getCatByOwner(app, userData.user.id!);
@@ -181,14 +196,15 @@ describe('Testing graphql api', () => {
         lng: 30.8,
       },
       bottomLeft: {
-        lat: 60.1,
-        lng: 19.8,
+        lat: 20,
+        lng: 62,
       },
     };
 
     await getCatByBoundingBox(app, location);
   });
 
+  // ✅
   // modify cat as second user
   it('should not modify a cat', async () => {
     const newCat: CatTest = {
@@ -201,11 +217,13 @@ describe('Testing graphql api', () => {
     await wrongUserPutCat(app, vars, userData2.token!);
   });
 
+  // ✅
   // delete cat as second user
   it('should not delete a cat', async () => {
     await wrongUserDeleteCat(app, catID1, userData2.token!);
   });
 
+  // ✅
   // modify cat by id
   it('should modify a cat', async () => {
     const newCat: CatTest = {
@@ -220,6 +238,7 @@ describe('Testing graphql api', () => {
     await userPutCat(app, vars, userData.token!);
   });
 
+  // ✅
   // modify cat by id as admin
   it('should modify a cat as admin', async () => {
     const newCat: CatTest = {
@@ -234,11 +253,13 @@ describe('Testing graphql api', () => {
     await userPutCat(app, vars, adminData.token!);
   });
 
+  // ✅
   // test delete cat
   it('should delete a cat', async () => {
     await userDeleteCat(app, catID1, userData.token!);
   });
 
+  // ✅
   // post another cat with same file and location
   let catID2: string;
   it('should upload another cat', async () => {
@@ -246,16 +267,19 @@ describe('Testing graphql api', () => {
     catID2 = cat.id!;
   });
 
+  // ✅
   // test delete cat by id as admin
   it('should delete a cat as admin', async () => {
     await userDeleteCat(app, catID2, adminData.token!);
   });
 
+  // ✅
   // it should not delete user by id as normal user
   it('should not delete a user', async () => {
     await wrongUserDeleteCat(app, userData2.user.id, userData.token);
   });
 
+  // ✅
   // test delete user by id as admin
   it('should delete a user as admin', async () => {
     const result = await adminDeleteUser(
@@ -272,6 +296,7 @@ describe('Testing graphql api', () => {
     );
   });
 
+  // ✅
   // test delete user based on token
   it('should delete current user', async () => {
     await deleteUser(app, userData.token!);
